@@ -38,7 +38,7 @@ services:
         condition: on-failure
       placement:
         constraints:
-          - node.hostname == <HOST_NAME>
+          - node.hostname == ip-172-31-45-191
     ports:
       - published: 7051
         target: 7051
@@ -62,7 +62,7 @@ services:
         condition: on-failure
       placement:
         constraints:
-          - node.hostname == <HOST_NAME>
+          - node.hostname == ip-172-31-45-191
     environment:
       - GOPATH=/opt/gopath
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
