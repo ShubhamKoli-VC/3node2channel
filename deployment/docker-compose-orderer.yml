@@ -1,11 +1,14 @@
+version: "3.4"
 
-version: '2'
+volumes:
+    orderer.example.com:
 
 networks:
-    fabric:
+    bymn:
+        external:
+            name: fabric
 
 services:
-
     orderer.example.com:
         extends:
             file: docker-compose-base.yml
@@ -13,17 +16,24 @@ services:
         container_name: orderer.example.com
         environment:
             - ORDERER_HOST=orderer.example.com
-        extra_hosts:
-            - "peer0.org1.example.com:172.31.58.209"
-            - "peer0.org2.example.com:172.31.51.44"
-            - "peer0.org3.example.com:172.31.53.42"
         volumes:
             - ../crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/msp
             - ../crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls:/var/hyperledger/tls
             - ../channel-artifacts/:/var/hyperledger/configs
-        networks:
-          fabric:
-             aliases:
-               - net
+        deploy:
+            mode: replicated
+            replicas: 1
+            restart_policy:
+                condition: on-failure
+            placement:
+                constraints:
+                    - node.hostname == ip-172-31-41-242
         ports:
-          - 7050:7050
+            - published: 7050
+              target: 7050
+              mode: host
+
+        networks:
+            bymn:
+                aliases:
+                    - orderer.example.com
