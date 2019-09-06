@@ -13,7 +13,7 @@ services:
         image: hyperledger/fabric-orderer:1.4.2
         environment:
             - ORDERER_HOST=orderer.example.com
-            - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=deployment_fabric
+            # - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric
             - ORDERER_HOME=/var/hyperledger/orderer
             - ORDERER_GENERAL_LOGLEVEL=debug
             - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/msp
@@ -41,6 +41,7 @@ services:
             - ../crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls:/var/hyperledger/tls
             - ../channel-artifacts/:/var/hyperledger/configs
             - ../crypto-config/ordererOrganizations/example.com/users:/var/hyperledger/users
+            - orderer.example.com:/var/hyperledger/production/orderer
         working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderer
         command: orderer
         deploy:
