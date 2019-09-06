@@ -9,17 +9,59 @@ networks:
       name: fabric
 
 services:
-  peer0.org3.example.com:
-    extends:
-      file: docker-compose-base.yml
-      service: peer
+  ca3:
+    image: hyperledger/fabric-ca
     environment:
-      - CORE_PEER_CHAINCODELISTENADDRESS=peer0.org3.example.com:7052
-      - CORE_PEER_ID=peer0.org3.example.com
-      - CORE_PEER_ADDRESS=peer0.org3.example.com:7051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.example.com:7051
+      - FABRIC_CA_SERVER_PORT=7054
+      - FABRIC_CA_HOME=/var/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.org3.example.com
+      - FABRIC_CA_SERVER_TLS_ENABLED=false
+      - FABRIC_CA_SERVER_CA_CERTFILE=/var/hyperledger/fabric-ca-server-config/ca.org3.example.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/var/hyperledger/fabric-ca-server-config/5bd88fd7d545ed93519fae943781d872032d62924a663380e6e6e2b29cd3fe1c_sk
+    command: sh -c 'fabric-ca-server start --ca.certfile /var/hyperledger/fabric-ca-server-config/ca.org3.example.com-cert.pem --ca.keyfile /var/hyperledger/fabric-ca-server-config/5bd88fd7d545ed93519fae943781d872032d62924a663380e6e6e2b29cd3fe1c_sk  -b admin:adminpw -d'
+    volumes:
+      - ./crypto-config/peerOrganizations/org3.example.com/ca/:/var/hyperledger/fabric-ca-server-config
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.hostname == ip-172-31-45-191
+    ports:
+      - published: 7054
+        target: 7054
+        mode: host
+    networks:
+      bymn:
+        aliases:
+          - ca.org3.example.com
+
+  peer0org3:
+    image: hyperledger/fabric-peer:1.4.2
+    environment:
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_PEER_NETWORKID=fabric
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric
+      - CORE_PEER_ADDRESSAUTODETECT=true
       - CORE_PEER_GOSSIP_ORGLEADER=false
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_PROFILE_ENABLED=true
+      - CORE_PEER_MSPCONFIGPATH=/var/hyperledger/msp
+      #- CORE_LEDGER_STATE_STATEDATABASE=LevelDB
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_LOGGING_GOSSIP=WARNING
+      # TLS settings
+      - CORE_PEER_TLS_ENABLED=false
+      - CORE_PEER_TLS_CLIENTAUTHREQUIRED=false
+      - CORE_PEER_TLS_CERT_FILE=/var/hyperledger/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/var/hyperledger/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/var/hyperledger/tls/ca.crt
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_ID=peer0.org3.example.com
+      - CORE_PEER_ADDRESS=peer0.org3.example.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org2.example.com:7051
       - CORE_PEER_LOCALMSPID=Org3MSP
       - CORE_PEER_TLS_CLIENTROOTCAS_FILES=/var/hyperledger/users/Admin@org3.example.com/tls/ca.crt
       - CORE_PEER_TLS_CLIENTCERT_FILE=/var/hyperledger/users/Admin@org3.example.com/tls/client.crt
@@ -36,7 +78,7 @@ services:
         condition: on-failure
       placement:
         constraints:
-          - node.hostname == <HOST_NAME>
+          - node.hostname == ip-172-31-38-56
     ports:
       - published: 7051
         target: 7051
@@ -49,7 +91,7 @@ services:
         aliases:
           - peer0.org3.example.com
 
-  cli:
+  org3cli:
     image: hyperledger/fabric-tools
     tty: true
     deploy:
@@ -59,11 +101,11 @@ services:
         condition: on-failure
       placement:
         constraints:
-          - node.hostname == <HOST_NAME>
+          - node.hostname == ip-172-31-38-56
     environment:
       - GOPATH=/opt/gopath
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_LOGGING_LEVEL=DEBUG
+      - FABRIC_LOGGING_SPEC=INFO
       - CORE_PEER_ID=cli
       - CORE_PEER_ADDRESS=peer0.org3.example.com:7051
       - CORE_PEER_LOCALMSPID=Org3MSP
