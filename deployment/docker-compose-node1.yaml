@@ -38,7 +38,7 @@ services:
         aliases:
           - ca.org1.example.com
 
-  peer0.org1.example.com:
+  peer0org1:
     image: hyperledger/fabric-peer:1.4.2
     environment:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
