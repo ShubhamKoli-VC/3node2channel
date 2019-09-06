@@ -19,7 +19,7 @@ services:
       - FABRIC_CA_SERVER_CA_KEYFILE=/var/hyperledger/fabric-ca-server-config/5bc6bf2142eb2d567db25c69d4974bf23406b451e67dbb196f877cc4c9841a97_sk
     command: sh -c 'fabric-ca-server start --ca.certfile /var/hyperledger/fabric-ca-server-config/ca.org2.example.com-cert.pem --ca.keyfile /var/hyperledger/fabric-ca-server-config/5bc6bf2142eb2d567db25c69d4974bf23406b451e67dbb196f877cc4c9841a97_sk  -b admin:adminpw -d'
     volumes:
-      - ./crypto-config/peerOrganizations/org2.example.com/ca/:/var/hyperledger/fabric-ca-server-config
+      - ../crypto-config/peerOrganizations/org2.example.com/ca/:/var/hyperledger/fabric-ca-server-config
     deploy:
       mode: replicated
       replicas: 1

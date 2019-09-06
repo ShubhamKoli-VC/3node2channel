@@ -20,7 +20,7 @@ services:
       - FABRIC_CA_SERVER_CA_KEYFILE=/var/hyperledger/fabric-ca-server-config/5bd88fd7d545ed93519fae943781d872032d62924a663380e6e6e2b29cd3fe1c_sk
     command: sh -c 'fabric-ca-server start --ca.certfile /var/hyperledger/fabric-ca-server-config/ca.org3.example.com-cert.pem --ca.keyfile /var/hyperledger/fabric-ca-server-config/5bd88fd7d545ed93519fae943781d872032d62924a663380e6e6e2b29cd3fe1c_sk  -b admin:adminpw -d'
     volumes:
-      - ./crypto-config/peerOrganizations/org3.example.com/ca/:/var/hyperledger/fabric-ca-server-config
+      - ../crypto-config/peerOrganizations/org3.example.com/ca/:/var/hyperledger/fabric-ca-server-config
     deploy:
       mode: replicated
       replicas: 1
@@ -61,7 +61,7 @@ services:
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
       - CORE_PEER_ID=peer0.org3.example.com
       - CORE_PEER_ADDRESS=peer0.org3.example.com:7051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org2.example.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.example.com:7051
       - CORE_PEER_LOCALMSPID=Org3MSP
       - CORE_PEER_TLS_CLIENTROOTCAS_FILES=/var/hyperledger/users/Admin@org3.example.com/tls/ca.crt
       - CORE_PEER_TLS_CLIENTCERT_FILE=/var/hyperledger/users/Admin@org3.example.com/tls/client.crt
