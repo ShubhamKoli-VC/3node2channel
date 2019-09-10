@@ -66,6 +66,7 @@ services:
       - CORE_PEER_TLS_CLIENTCERT_FILE=/var/hyperledger/users/Admin@org4.example.com/tls/client.crt
       - CORE_PEER_TLS_CLIENTKEY_FILE=/var/hyperledger/users/Admin@org4.example.com/tls/client.key
     volumes:
+      - /var/run/:/host/var/run/
       - ../crypto-config/peerOrganizations/org4.example.com/peers/peer0.org4.example.com/msp:/var/hyperledger/msp
       - ../crypto-config/peerOrganizations/org4.example.com/peers/peer0.org4.example.com/tls:/var/hyperledger/tls
       - ../crypto-config/peerOrganizations/org4.example.com/users:/var/hyperledger/users
