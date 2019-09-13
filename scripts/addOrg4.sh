@@ -8,7 +8,7 @@ peer channel fetch config config_block.pb -o orderer.example.com:7050 -c $CHANNE
 configtxlator proto_decode --input config_block.pb --type common.Block | jq .data.data[0].payload.data.config > config.json
 
 #Add the Org4 Crypto Material
-jq -s '.[0] * {"channel_group":{"groups":{"Application":{"groups": {"Org4MSP":.[1]}}}}}' config.json ./channel-artifacts/org4.json > modified_config.json
+jq -s '.[0] * {"channel_group":{"groups":{"Application":{"groups": {"Org4MSP":.[1]}}}}}' config.json ./crypto-config/org4.json > modified_config.json
 
 configtxlator proto_encode --input config.json --type common.Config --output config.pb
 
