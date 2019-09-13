@@ -105,7 +105,6 @@ services:
         constraints:
           - node.hostname == ip-172-31-45-191
     environment:
-      - GOPATH=/opt/gopath
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - FABRIC_LOGGING_SPEC=INFO
       - CORE_PEER_ID=cli
