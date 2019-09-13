@@ -104,7 +104,6 @@ services:
         constraints:
           - node.hostname == ip-172-31-41-242
     environment:
-      - GOPATH=/opt/gopath
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - FABRIC_LOGGING_SPEC=INFO
       - CORE_PEER_ID=cli
@@ -116,10 +115,9 @@ services:
     command: /bin/bash
     volumes:
       - /var/run/:/host/var/run/
-      - ../../chaincode/:/opt/gopath/src/github.com/chaincode
-      - $GOPATH/src/github.com/hyperledger/fabric/:/opt/gopath/src/github.com/hyperledger/fabric/
       - ../crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
       - ../channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts/
+      - ../scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
     depends_on:
       - peer0.org1.example.com
     networks:
