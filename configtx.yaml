@@ -20,6 +20,12 @@ Organizations:
         Name: Org3MSP
         ID: Org3MSP
         MSPDir: ./crypto-config/peerOrganizations/org3.example.com/msp
+    
+    - &Org4
+        Name: Org4MSP
+        ID: Org4MSP
+        MSPDir: ./crypto-config/peerOrganizations/org4.example.com/msp
+        
 
 Orderer: &OrdererDefaults
 
@@ -28,7 +34,7 @@ Orderer: &OrdererDefaults
         - orderer.example.com:7050
     BatchTimeout: 2s
     BatchSize:
-        MaxMessageCount: 10
+        MaxMessageCount: 30
         AbsoluteMaxBytes: 99 MB
         PreferredMaxBytes: 512 KB
     Kafka:
